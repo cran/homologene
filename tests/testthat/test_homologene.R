@@ -2,12 +2,12 @@ context('homologene testing')
 
 test_that('Multiple orthologues',{
     humanOrthos = human2mouse(c("GZMH"))
-    expect_that(humanOrthos$mouseGene,equals(c('Gzmd','Gzme','Gzmg','Gzmf')))
+    expect_equal(humanOrthos$mouseGene,c('Gzmd','Gzme','Gzmg','Gzmf'))
 })
 
 test_that('Regular functionality',{
-    expect_that(mouse2human(c('Eno2','Mog'))$humanGene,equals(c('ENO2','MOG')))
-    expect_that(dim(mouse2human(c('lolwut'))), equals(c(0,4)))
+    expect_equal(mouse2human(c('Eno2','Mog'))$humanGene,c('ENO2','MOG'))
+    expect_equal(dim(mouse2human(c('lolwut'))), c(0,4))
 })
 
 test_that('Other species',{
@@ -18,9 +18,36 @@ test_that('Other species',{
     
 })
 
+
+
+test_that('homologene2',{
+    mouse2human(c('Mesd',
+                  'Trp53rka',
+                  'Cstdc4',
+                  'Ifit3b'),
+                db = homologeneData2) -> 
+        genes
+    
+    expect_true(all(genes$humanGene == c("MESD", "TP53RK", "CSTA", "IFIT3")))
+    
+    mouse2human(c('Mesd',
+                  'Trp53rka',
+                  'Cstdc4',
+                  'Ifit3b'),
+                db = homologeneData) -> 
+        genes
+    
+    expect_true(nrow(genes)==0)
+
+})
+
+
+
+
 test_that('Detached behaviour',{
     detach("package:homologene", unload=TRUE)
-    expect_that(homologene::mouse2human(c('Eno2','Mog'))$humanGene,equals(c('ENO2','MOG')))
-    expect_that(dim(homologene::human2mouse(c('lolwut'))), equals(c(0,4)))
+    expect_equal(homologene::mouse2human(c('Eno2','Mog'))$humanGene,c('ENO2','MOG'))
+    expect_equal(dim(homologene::human2mouse(c('lolwut'))), c(0,4))
 })
+
 
